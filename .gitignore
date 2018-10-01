@@ -1,0 +1,6 @@
+src/packages/
+src/SitecoreCommunity.SXA.13922/bin/
+src/SitecoreCommunity.SXA.13922/obj/
+src/.vs/
+*.pubxml
+*.user
