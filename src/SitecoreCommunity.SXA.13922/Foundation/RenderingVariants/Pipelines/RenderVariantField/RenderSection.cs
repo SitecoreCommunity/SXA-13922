@@ -32,14 +32,15 @@ namespace SitecoreCommunity.SXA.Foundation.RenderingVariants.Pipelines.RenderVar
                 {
                     if (args.ResultControl is HyperLink link && link.Controls.Count == 1)
                     {
-                        if (link.Controls[0] is HtmlGenericControl genericControl)
+                        if (link.Controls[0] is HtmlGenericControl unwantedContainer)
                         {
-                            if (string.Equals(genericControl.TagName, "div", StringComparison.OrdinalIgnoreCase))
+                            var unwantedTags = new[] { "div" };
+                            if (unwantedTags.Any(tag => string.Equals(unwantedContainer.TagName, tag, StringComparison.OrdinalIgnoreCase)))
                             {
-                                ReplaceContainerWithItsChildren(genericControl);
+                                ReplaceContainerWithItsChildren(unwantedContainer);
 
                                 // re-render control since it's changed
-                                args.Result = RenderControl(genericControl);
+                                args.Result = RenderControl(args.ResultControl);
                             }
                         }
                     }
