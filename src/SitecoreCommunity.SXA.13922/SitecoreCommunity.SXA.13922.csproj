@@ -93,7 +93,7 @@
     <None Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Foundation\RenderingVariants\Pipelines\RenderVariantField\RenderSection.cs" />
+    <Compile Include="Foundation\RenderingVariants\Pipelines\RenderVariantField\RemoveUnwantedContainer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
