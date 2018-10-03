@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
-using System.Web.UI.WebControls;
 
 using Sitecore;
 using Sitecore.XA.Foundation.RenderingVariants.Fields;
@@ -30,17 +29,26 @@ namespace SitecoreCommunity.SXA.Foundation.RenderingVariants.Pipelines.RenderVar
             {
                 if (variantSection.IsLink && string.IsNullOrWhiteSpace(variantSection.Tag))
                 {
-                    if (args.ResultControl is HyperLink link && link.Controls.Count == 1)
+                    // known link types are Hyperlink and RenderRenderingVariantFieldProcessor+RenderFieldControl
+                    if (args.ResultControl is Control link && link.Controls.Count == 1)
                     {
                         if (link.Controls[0] is HtmlGenericControl unwantedContainer)
                         {
-                            var unwantedTags = new[] { "div" };
+                            var unwantedTags = new[] { "div", "span" };
                             if (unwantedTags.Any(tag => string.Equals(unwantedContainer.TagName, tag, StringComparison.OrdinalIgnoreCase)))
                             {
-                                ReplaceContainerWithItsChildren(unwantedContainer);
+                                // act only if dummy <div> or <span> without attributes
+                                if (unwantedContainer.Attributes.Count == 0)
+                                {
+                                    // act only if there are controls in it
+                                    if (unwantedContainer.Controls.Count > 0)
+                                    {
+                                        ReplaceContainerWithItsChildren(unwantedContainer);
 
-                                // re-render control since it's changed
-                                args.Result = RenderControl(args.ResultControl);
+                                        // re-render control since it's changed
+                                        args.Result = RenderControl(args.ResultControl);
+                                    }
+                                }
                             }
                         }
                     }
