@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Linq;
 using System.Web.UI;
 using System.Web.UI.HtmlControls;
@@ -9,21 +10,15 @@ using Sitecore.XA.Foundation.Variants.Abstractions.Pipelines.RenderVariantField;
 
 namespace SitecoreCommunity.SXA.Foundation.RenderingVariants.Pipelines.RenderVariantField
 {
-    public class RenderSection : Sitecore.XA.Foundation.RenderingVariants.Pipelines.RenderVariantField.RenderSection
+    public class RemoveUnwantedContainer
     {
         [UsedImplicitly]
-        public RenderSection()
+        public RemoveUnwantedContainer()
         {
         }
-
-        public override void RenderField(RenderVariantFieldArgs args)
-        {
-            base.RenderField(args);
-
-            RemoveUnwantedContainer(args);
-        }
-
-        private void RemoveUnwantedContainer(RenderVariantFieldArgs args)
+        
+        [UsedImplicitly]
+        public void Process(RenderVariantFieldArgs args)
         {
             if (args.VariantField is VariantSection variantSection)
             {
@@ -68,6 +63,16 @@ namespace SitecoreCommunity.SXA.Foundation.RenderingVariants.Pipelines.RenderVar
             foreach (var child in childrenToPreserve)
             {
                 control.Controls.Add(child);
+            }
+        }
+
+        private string RenderControl(Control control)
+        {
+            using (var stringWriter = new StringWriter())
+            {
+                control.RenderControl(new HtmlTextWriter(stringWriter));
+
+                return stringWriter.ToString();
             }
         }
     }
